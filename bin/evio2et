@@ -1,0 +1,11 @@
+#!/bin/csh -f
+
+# $1 - Evio file full path
+# $2 - ET name
+# $3 - ET host name
+# $4 - ET port
+
+setenv CLASSPATH "./:$CODA/common/jar/*"
+
+cd ../out/production/evio2et
+$JAVA_HOME/bin/java org.jlab.coda.evio2et.EvioToEt $1 $2 $3 $4

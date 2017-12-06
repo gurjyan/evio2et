@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="evio2et" default="all">
+  
+  
+  <property file="evio2et.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+
+  <property environment ="env"/>
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.zip"/>
+    <include name="*.egg"/>
+    <include name="*.ane"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.jar.classpath">
+    <fileset dir="${env.CODA}/common/jar">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module evio2et -->
+  
+  <dirname property="module.evio2et.basedir" file="${ant.file}"/>
+  
+  
+  
+  <property name="compiler.args.evio2et" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="evio2et.output.dir" value="${module.evio2et.basedir}/out/production/evio2et"/>
+  <property name="evio2et.testoutput.dir" value="${module.evio2et.basedir}/out/test/evio2et"/>
+  
+  <path id="evio2et.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="evio2et.module.production.classpath">
+    <path refid="library.jar.classpath"/>
+  </path>
+  
+  <path id="evio2et.runtime.production.module.classpath">
+    <pathelement location="${evio2et.output.dir}"/>
+    <path refid="library.jar.classpath"/>
+  </path>
+  
+  <path id="evio2et.module.classpath">
+    <pathelement location="${evio2et.output.dir}"/>
+    <path refid="library.jar.classpath"/>
+  </path>
+  
+  <path id="evio2et.runtime.module.classpath">
+    <pathelement location="${evio2et.testoutput.dir}"/>
+    <pathelement location="${evio2et.output.dir}"/>
+    <path refid="library.jar.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.evio2et">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.evio2et">
+    <patternset refid="excluded.from.module.evio2et"/>
+  </patternset>
+  
+  <path id="evio2et.module.sourcepath">
+    <dirset dir="${module.evio2et.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.evio2et" depends="compile.module.evio2et.production,compile.module.evio2et.tests" description="Compile module evio2et"/>
+  
+  <target name="compile.module.evio2et.production" description="Compile module evio2et; production classes">
+    <mkdir dir="${evio2et.output.dir}"/>
+    <javac destdir="${evio2et.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
+      <compilerarg line="${compiler.args.evio2et}"/>
+      <bootclasspath refid="evio2et.module.bootclasspath"/>
+      <classpath refid="evio2et.module.production.classpath"/>
+      <src refid="evio2et.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.evio2et"/>
+    </javac>
+    
+    <copy todir="${evio2et.output.dir}">
+      <fileset dir="${module.evio2et.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.evio2et.tests" depends="compile.module.evio2et.production" description="compile module evio2et; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.evio2et" description="cleanup module">
+    <delete dir="${evio2et.output.dir}"/>
+    <delete dir="${evio2et.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.evio2et" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.evio2et" description="build all modules"/>
+  
+  <target name="all" depends="build.modules" description="build all"/>
+</project>
