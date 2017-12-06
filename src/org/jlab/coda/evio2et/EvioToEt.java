@@ -69,7 +69,7 @@ public class EvioToEt {
                 System.out.println("We got a NULL event !!!");
                 return;
             }
-            System.out.println("Event = \n" + event.toXML());
+//            System.out.println("Event = \n" + event.toXML());
             int i=0;
             while ( (event = fileReader.parseNextEvent()) != null) {
 
@@ -88,6 +88,7 @@ public class EvioToEt {
 //                        }
 //                    }
 
+                    System.out.println("DDDD ");
                     EventWriter evioWriter = new EventWriter(etEventArray[0].getDataBuffer());
                     evioWriter.writeEvent(event);
                     sys.putEvents(attach, etEventArray);
