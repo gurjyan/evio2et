@@ -88,12 +88,10 @@ public class EvioToEt {
 //                        }
 //                    }
 
-                    while(true) {
-                        System.out.println("DDDD ");
+                        System.out.println("Event number = "+ i++);
                         EventWriter evioWriter = new EventWriter(etEventArray[0].getDataBuffer());
                         evioWriter.writeEvent(event);
                         sys.putEvents(attach, etEventArray);
-                    }
 
                 } catch (EtException | EtDeadException | EtClosedException | EtEmptyException
                         | EtBusyException | EtTimeoutException | EtWakeUpException  e) {
