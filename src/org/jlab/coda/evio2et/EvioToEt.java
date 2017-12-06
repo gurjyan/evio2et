@@ -67,20 +67,31 @@ public class EvioToEt {
                 return;
             }
             System.out.println("Event = \n" + event.toXML());
+            int i=0;
             while ( (event = fileReader.parseNextEvent()) != null) {
 
                 EtEvent[] etEventArray = new EtEvent[0];
                 try {
                     etEventArray = sys.newEvents(attach, Mode.SLEEP, 0, 1, (int)sys.getEventSize());
 
-                    System.out.println("Event = " + event.toString());
+//                    System.out.println("Event = " + event.toString());
+
+                    if(i++ > 333){
+                        while(true){
+                            EventWriter evioWriter = new EventWriter(etEventArray[0].getDataBuffer());
+                            evioWriter.writeEvent(event);
+                            sys.putEvents(attach, etEventArray);
+                            Thread.sleep(100);
+                        }
+                    }
 
                     EventWriter evioWriter = new EventWriter(etEventArray[0].getDataBuffer());
                     evioWriter.writeEvent(event);
                     sys.putEvents(attach, etEventArray);
 
-                } catch (EtException | EtDeadException | EtClosedException | EtEmptyException |
-                        EtBusyException | EtTimeoutException | EtWakeUpException e) {
+
+                } catch (EtException | EtDeadException | EtClosedException | EtEmptyException
+                        | EtBusyException | EtTimeoutException | EtWakeUpException | InterruptedException e) {
                     e.printStackTrace();
                 }
             }
