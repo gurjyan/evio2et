@@ -29,7 +29,7 @@ public class EvioToEt {
             System.out.println("evio2et <fileName> <etName> <etHost (default = localhost)> <etPort (default = 11111)");
             return;
         } else if(args.length == 1) {
-            System.out.println("File name and ET name are required parameters");
+            System.out.println("File name and ET name are required arguments");
             return;
         } else if(args.length == 2){
             fileName = args[0];
@@ -38,11 +38,14 @@ public class EvioToEt {
             fileName = args[0];
             etName = args[1];
             host = args[2];
-        }else if (args.length == 3){
+        }else if (args.length == 4){
             fileName = args[0];
             etName = args[1];
             host = args[2];
             port = Integer.parseInt(args[3]);
+        } else {
+            System.out.println("wrong set of arguments");
+            return;
         }
 
         EvioEvent event;
@@ -76,14 +79,14 @@ public class EvioToEt {
 
 //                    System.out.println("Event = " + event.toString());
 
-                    if(i++ > 333){
-                        while(true){
-                            EventWriter evioWriter = new EventWriter(etEventArray[0].getDataBuffer());
-                            evioWriter.writeEvent(event);
-                            sys.putEvents(attach, etEventArray);
-                            Thread.sleep(100);
-                        }
-                    }
+//                    if(i++ > 333){
+//                        while(true){
+//                            EventWriter evioWriter = new EventWriter(etEventArray[0].getDataBuffer());
+//                            evioWriter.writeEvent(event);
+//                            sys.putEvents(attach, etEventArray);
+//                            Thread.sleep(100);
+//                        }
+//                    }
 
                     EventWriter evioWriter = new EventWriter(etEventArray[0].getDataBuffer());
                     evioWriter.writeEvent(event);
@@ -91,7 +94,7 @@ public class EvioToEt {
 
 
                 } catch (EtException | EtDeadException | EtClosedException | EtEmptyException
-                        | EtBusyException | EtTimeoutException | EtWakeUpException | InterruptedException e) {
+                        | EtBusyException | EtTimeoutException | EtWakeUpException  e) {
                     e.printStackTrace();
                 }
             }
