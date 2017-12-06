@@ -10,6 +10,8 @@ import org.jlab.coda.jevio.EvioReader;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
  * Created by gurjyan on 12/6/17.
@@ -79,17 +81,10 @@ public class EvioToEt {
 
 //                    System.out.println("Event = " + event.toString());
 
-//                    if(i++ > 333){
-//                        while(true){
-//                            EventWriter evioWriter = new EventWriter(etEventArray[0].getDataBuffer());
-//                            evioWriter.writeEvent(event);
-//                            sys.putEvents(attach, etEventArray);
-//                            Thread.sleep(100);
-//                        }
-//                    }
-
                         System.out.println("Event number = " + ++i);
-                        EventWriter evioWriter = new EventWriter(etEventArray[0].getDataBuffer());
+                    ByteBuffer bf = etEventArray[0].getDataBuffer();
+                    bf.order(ByteOrder.LITTLE_ENDIAN);
+                        EventWriter evioWriter = new EventWriter(bf);
                         evioWriter.writeEvent(event);
                         sys.putEvents(attach, etEventArray);
 
