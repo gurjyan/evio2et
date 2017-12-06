@@ -45,11 +45,7 @@ public class EvioToEt {
             port = Integer.parseInt(args[3]);
         }
 
-        String etName = args[1];
-        String host = args[2];
-        int port = Integer.parseInt(args[3]);
         EvioEvent event;
-
         try {
             etConnect(etName, host, port);
         } catch (EtException | IOException | EtTooManyException | EtDeadException | EtClosedException e) {
