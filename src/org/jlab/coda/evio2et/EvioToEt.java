@@ -82,7 +82,7 @@ public class EvioToEt {
                     System.out.println("Event = " + event.toString());
 
                     ByteBuffer bf = etEventArray[0].getDataBuffer();
-//                    bf.order(ByteOrder.LITTLE_ENDIAN);
+                    bf.order(ByteOrder.LITTLE_ENDIAN);
                         EventWriter evioWriter = new EventWriter(bf);
                         evioWriter.writeEvent(event);
                         sys.putEvents(attach, etEventArray);
