@@ -65,7 +65,6 @@ public class EvioToEt {
             EvioReader fileReader = new EvioReader(fileName);
             System.out.println("\nnum ev = " + fileReader.getEventCount());
             System.out.println("dictionary = " + fileReader.getDictionaryXML() + "\n");
-            System.out.printf(" new jar!!!");
             event = fileReader.parseNextEvent();
             if (event == null) {
                 System.out.println("We got a NULL event !!!");
