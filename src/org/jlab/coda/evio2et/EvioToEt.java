@@ -65,7 +65,7 @@ public class EvioToEt {
             EvioReader fileReader = new EvioReader(fileName);
             System.out.println("\nnum ev = " + fileReader.getEventCount());
             System.out.println("dictionary = " + fileReader.getDictionaryXML() + "\n");
-
+            System.out.printf(" new jar!!!");
             event = fileReader.parseNextEvent();
             if (event == null) {
                 System.out.println("We got a NULL event !!!");
@@ -79,10 +79,10 @@ public class EvioToEt {
                 try {
                     etEventArray = sys.newEvents(attach, Mode.SLEEP, 0, 1, (int)sys.getEventSize());
 
-//                    System.out.println("Event = " + event.toString());
+                    System.out.println("Event = " + event.toString());
 
                     ByteBuffer bf = etEventArray[0].getDataBuffer();
-                    bf.order(ByteOrder.LITTLE_ENDIAN);
+//                    bf.order(ByteOrder.LITTLE_ENDIAN);
                         EventWriter evioWriter = new EventWriter(bf);
                         evioWriter.writeEvent(event);
                         sys.putEvents(attach, etEventArray);
