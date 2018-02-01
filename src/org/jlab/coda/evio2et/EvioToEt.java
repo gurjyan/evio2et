@@ -3,10 +3,7 @@ package org.jlab.coda.evio2et;
 import org.jlab.coda.et.*;
 import org.jlab.coda.et.enums.Mode;
 import org.jlab.coda.et.exception.*;
-import org.jlab.coda.jevio.EventWriter;
-import org.jlab.coda.jevio.EvioEvent;
-import org.jlab.coda.jevio.EvioException;
-import org.jlab.coda.jevio.EvioReader;
+import org.jlab.coda.jevio.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +15,7 @@ import java.nio.ByteOrder;
  */
 public class EvioToEt {
     private static EtSystem sys;
-    private  static EtAttachment attach;
+    private static EtAttachment attach;
 
     private static String fileName;
     private static String etName;
@@ -27,20 +24,20 @@ public class EvioToEt {
 
     public static void main(String[] args) {
 
-        if(args.length == 0 || args[0].equals("-h") || args[0].equals("-help")){
+        if (args.length == 0 || args[0].equals("-h") || args[0].equals("-help")) {
             System.out.println("evio2et <fileName> <etName> <etHost (default = localhost)> <etPort (default = 11111)");
             return;
-        } else if(args.length == 1) {
+        } else if (args.length == 1) {
             System.out.println("File name and ET name are required arguments");
             return;
-        } else if(args.length == 2){
+        } else if (args.length == 2) {
             fileName = args[0];
             etName = args[1];
-        } else if (args.length == 3){
+        } else if (args.length == 3) {
             fileName = args[0];
             etName = args[1];
             host = args[2];
-        }else if (args.length == 4){
+        } else if (args.length == 4) {
             fileName = args[0];
             etName = args[1];
             host = args[2];
@@ -71,28 +68,32 @@ public class EvioToEt {
                 return;
             }
 //            System.out.println("Event = \n" + event.toXML());
-            int i=0;
-            while ( (event = fileReader.parseNextEvent()) != null) {
+            while ((event = fileReader.parseNextEvent()) != null) {
 
-                EtEvent[] etEventArray = new EtEvent[0];
+                EtEvent[] etEventArray;
                 try {
-                    etEventArray = sys.newEvents(attach, Mode.SLEEP, 0, 1, (int)sys.getEventSize());
+                    etEventArray = sys.newEvents(attach, Mode.SLEEP, 0, 1, (int) sys.getEventSize());
 
-                    System.out.println("Event = " + event.toString());
+//                    System.out.println("Event = " + event.toString());
 
                     ByteBuffer bf = etEventArray[0].getDataBuffer();
                     bf.order(ByteOrder.LITTLE_ENDIAN);
-                        EventWriter evioWriter = new EventWriter(bf);
-                        evioWriter.writeEvent(event);
-                        sys.putEvents(attach, etEventArray);
+                    EventWriter evioWriter = new EventWriter(bf);
+                    evioWriter.writeEvent(event);
+                    evioWriter.close();
+                    etEventArray[0].setLength((int) evioWriter.getBytesWrittenToBuffer());
+                    etEventArray[0].setByteOrder(EtConstants.endianLittle);
+
+                    System.out.println("DDD: " + evioWriter.getBytesWrittenToBuffer() + " et-size = " + sys.getEventSize() + " evt-size = " + event.getTotalBytes());
+
+                    sys.putEvents(attach, etEventArray);
 
                 } catch (EtException | EtDeadException | EtClosedException | EtEmptyException
-                        | EtBusyException | EtTimeoutException | EtWakeUpException  e) {
+                        | EtBusyException | EtTimeoutException | EtWakeUpException e) {
                     e.printStackTrace();
                 }
             }
-        }
-        catch (IOException | EvioException e) {
+        } catch (IOException | EvioException e) {
             e.printStackTrace();
         }
 
